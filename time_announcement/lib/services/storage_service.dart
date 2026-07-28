@@ -1,7 +1,4 @@
-// 4 settings, each with its own save/load pair (8 methods total). Storage
-// backends like SharedPreferences only expose a single write call and a
-// single read call per value -- there's no read+write in one -- so every
-// piece of persisted state needs both a save and a load method here.
+// 4 settings, each with its own save/load pair (8 methods total).
 abstract class StorageServce {
   // Whether the app has been launched before (first-run vs. relaunch).
   Future<void> saveHasLaunchedBefore(bool value);
