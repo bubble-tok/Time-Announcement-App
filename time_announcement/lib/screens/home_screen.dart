@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final _storageService = LocalStorageService();
   bool _permissionsGranted = true;
   bool _globalEnabled = false;
+  bool _userToggled = false;
 
   @override
   void initState() {
@@ -55,12 +56,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   // reads are near-instant so no loading indicator is needed.
   Future<void> _loadGlobalEnabled() async {
     final enabled = await _storageService.loadGlobalEnabled();
-    if (mounted) {
+    // If the user already flipped the switch while this was loading, their
+    // choice wins -- don't overwrite it with the older stored value.
+    if (mounted && !_userToggled) {
       setState(() => _globalEnabled = enabled);
     }
   }
 
   void _onGlobalEnabledChanged(bool value) {
+    _userToggled = true;
     setState(() => _globalEnabled = value);
     _storageService.saveGlobalEnabled(value);
   }
