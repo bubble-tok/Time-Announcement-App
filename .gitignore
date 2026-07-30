@@ -11,6 +11,8 @@
 docs/extra_local_storage_plan.md
 docs/extra_schedule_model.md
 docs/extra_schedule_model_plan.md
+docs/extra_time_formatter.md
+docs/extra_time_formatter_plan.md
 
 # Flutter repo-specific
 /bin/cache/
