@@ -9,6 +9,8 @@
 
 # Local planning docs, not meant for version control
 docs/extra_local_storage_plan.md
+docs/extra_schedule_model.md
+docs/extra_schedule_model_plan.md
 
 # Flutter repo-specific
 /bin/cache/

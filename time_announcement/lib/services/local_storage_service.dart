@@ -1,9 +1,10 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'storage_service.dart';
 
-// SharedPreferences.getInstance() is called per-method rather than cached
-// here because the plugin already caches the instance internally -- no
-// extra state to manage on our end.
+/**
+ * LocalStorageService is a concrete implementation of StorageService 
+ * that uses SharedPreferences for persistent storage.
+ */
 class LocalStorageService implements StorageService {
   static const _hasLaunchedBeforeKey = 'hasLaunchedBefore';
   static const _globalEnabledKey = 'globalEnabled';
