@@ -6,7 +6,6 @@
 - [Technology Stack](#technology-stack)
 
 ## Overview
-:/
 Time Announcement is a Flutter mobile app that announces the current 
 time at pre-scheduled moments throughout the day using text-to-speech (TTS).
 
