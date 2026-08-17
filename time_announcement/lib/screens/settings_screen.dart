@@ -11,8 +11,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 // re-check status whenever the app resumes, so returning from device Settings updates the rows automatically
-class _SettingsScreenState extends State<SettingsScreen>
-    with WidgetsBindingObserver {
+class _SettingsScreenState extends State<SettingsScreen> with WidgetsBindingObserver {
   final _permissionService = PermissionService();
   PermissionStatus? _notificationStatus;
   PermissionStatus? _exactAlarmStatus;

@@ -92,6 +92,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       },
     );
   }
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,6 +115,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   },
                   child: const Text('Fix in Settings'),
                 ),
+                ElevatedButton(
+                  child: const Text('placeholder'),
+                  onPressed: (){
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const )
+                    )
+                  }
+                  
+                )
               ],
             ),
           Expanded(
