@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 /**
- * Schedule represents the user's schedule for time announcements.
- * It contains a flag indicating whether announcements are enabled,
- * and a list of times of day when announcements should occur.
+ * Schedule represents the user's schedule. It contains a flag indicating whether announcements are enabled,
  */
 class Schedule {
   final bool isEnabled;

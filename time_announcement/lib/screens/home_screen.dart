@@ -51,13 +51,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
-  // Loads the previously-saved ON/OFF state. _globalEnabled starts false
-  // (see field default above) until this resolves -- SharedPreferences
-  // reads are near-instant so no loading indicator is needed.
+
   Future<void> _loadGlobalEnabled() async {
     final enabled = await _storageService.loadGlobalEnabled();
-    // If the user already flipped the switch while this was loading, their
-    // choice wins -- don't overwrite it with the older stored value.
+
     if (mounted && !_userToggled) {
       setState(() => _globalEnabled = enabled);
     }
@@ -68,11 +65,38 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     setState(() => _globalEnabled = value);
     _storageService.saveGlobalEnabled(value);
   }
-
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('AlertDialog Title'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('This is a demo alert dialog.'),
+                Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Time Announcement')),
+      appBar: AppBar(title: const Text('Time Announcement')
+          actions: const <Widget>[SettingsScreen()],),
       body: Column(
         children: [
           if (!_permissionsGranted)

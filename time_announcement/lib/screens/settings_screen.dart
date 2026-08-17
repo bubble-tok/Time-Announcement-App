@@ -61,16 +61,31 @@ class _SettingsScreenState extends State<SettingsScreen>
     final isGranted = status?.isGranted ?? false;
     return ListTile(
       title: Text(label),
-      subtitle: Text(status == null ? 'Checking...' : _label(status)),
+      content: const SingleChildScrollView(
+        child: ListBody(
+          children: <Widget> [
+            Text(status == null ? 'Checking...' : _label(status)),
+          ]
+        )
+      )
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Approve'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
       trailing: isGranted
           ? null
           : TextButton(
+              barrierDismissible: false,
               onPressed: () => _permissionService.openSettings(),
               child: const Text('Open Settings'),
             ),
     );
   }
-
+  
   // The build method constructs the UI for the Settings screen, displaying the permission rows and a placeholder for volume settings.
   @override
   Widget build(BuildContext context) {

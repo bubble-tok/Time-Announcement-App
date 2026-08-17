@@ -1,4 +1,5 @@
-// 4 settings, each with its own save/load pair (8 methods total).
+/** Abstract 
+ */
 abstract class StorageService {
   // Whether the app has been launched before (first-run vs. relaunch).
   Future<void> saveHasLaunchedBefore(bool value);

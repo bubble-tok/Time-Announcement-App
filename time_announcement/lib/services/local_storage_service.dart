@@ -2,8 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'storage_service.dart';
 
 /**
- * LocalStorageService is a concrete implementation of StorageService 
- * that uses SharedPreferences for persistent storage.
+ * LocalStorageService is a concrete implementation of StorageService
  */
 class LocalStorageService implements StorageService {
   static const _hasLaunchedBeforeKey = 'hasLaunchedBefore';
