@@ -11,7 +11,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 // re-check status whenever the app resumes, so returning from device Settings updates the rows automatically
-class _SettingsScreenState extends State<SettingsScreen> with WidgetsBindingObserver {
+class _SettingsScreenState extends State<SettingsScreen>
+    with WidgetsBindingObserver {
   final _permissionService = PermissionService();
   PermissionStatus? _notificationStatus;
   PermissionStatus? _exactAlarmStatus;
@@ -55,45 +56,52 @@ class _SettingsScreenState extends State<SettingsScreen> with WidgetsBindingObse
     return status.toString();
   }
 
-  // A row for a single permission, showing its label, status, and an "Open Settings" button if it's not granted.
-  Widget _permissionRow(String label, PermissionStatus? status) {
-    final isGranted = status?.isGranted ?? false;
+  // single permission row with its label status and open settings button if not granted
+  Widget _permissionRow(
+    String label,
+    PermissionStatus? status,
+    Future<PermissionStatus> Function() request,
+  ) {
+    Widget? trailing;
+    if (status != null && status.isPermanentlyDenied) {
+      trailing = TextButton(
+        onPressed: () => _permissionService.openSettings(),
+        child: const Text('Open Settings'),
+      );
+    } else if (status != null && !status.isGranted) {
+      trailing = TextButton(
+        onPressed: () async {
+          await request();
+          _refreshPermissionStatus();
+        },
+        child: const Text('Approve'),
+      );
+    }
+
     return ListTile(
       title: Text(label),
-      content: const SingleChildScrollView(
-        child: ListBody(
-          children: <Widget> [
-            Text(status == null ? 'Checking...' : _label(status)),
-          ]
-        )
-      )
-      actions: <Widget>[
-        TextButton(
-          child: const Text('Approve'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-      trailing: isGranted
-          ? null
-          : TextButton(
-              barrierDismissible: false,
-              onPressed: () => _permissionService.openSettings(),
-              child: const Text('Open Settings'),
-            ),
+      subtitle: Text(status == null ? 'Checking...' : _label(status)),
+      trailing: trailing,
     );
   }
-  
-  // The build method constructs the UI for the Settings screen, displaying the permission rows and a placeholder for volume settings.
+
+  // constructs the UI for the Settings screen, displaying the permission rows and a placeholder for volume settings.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         children: [
-          _permissionRow('Notifications', _notificationStatus),
-          _permissionRow('Exact Alarm', _exactAlarmStatus),
+          _permissionRow(
+            'Notifications',
+            _notificationStatus,
+            _permissionService.requestNotification,
+          ),
+          _permissionRow(
+            'Exact Alarm',
+            _exactAlarmStatus,
+            _permissionService.requestExactAlarm,
+          ),
           const Divider(),
           const ListTile(title: Text('Volume (TODO)')),
         ],

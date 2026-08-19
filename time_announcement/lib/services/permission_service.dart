@@ -18,6 +18,15 @@ class PermissionService {
     await permissions.request();
   }
 
+  // Requests notification permission from the user
+  Future<PermissionStatus> requestNotification() =>
+      Permission.notification.request();
+
+  Future<PermissionStatus> requestExactAlarm() async {
+    if (kIsWeb) return PermissionStatus.granted;
+    return Permission.scheduleExactAlarm.request();
+  }
+
   // Opens the device's app settings page, for when a permission is denied
   Future<bool> openSettings() => openAppSettings();
 }

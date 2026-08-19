@@ -97,8 +97,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Time Announcement')
-          actions: const <Widget>[SettingsScreen()],),
+      appBar: AppBar(
+        title: const Text('Time Announcement'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           if (!_permissionsGranted)
@@ -116,14 +127,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   child: const Text('Fix in Settings'),
                 ),
                 ElevatedButton(
+                  onPressed: _showMyDialog,
                   child: const Text('placeholder'),
-                  onPressed: (){
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const )
-                    )
-                  }
-                  
-                )
+                ),
               ],
             ),
           Expanded(
