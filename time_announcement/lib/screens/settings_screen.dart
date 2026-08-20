@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../services/local_storage_service.dart';
 import '../services/permission_service.dart';
+import '../services/tts_service.dart';
+import '../utils/time_formatter.dart';
 
 // Placeholder Settings screen
 class SettingsScreen extends StatefulWidget {
@@ -10,18 +13,23 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-// re-check status whenever the app resumes, so returning from device Settings updates the rows automatically
+// re-check status whenever the app resumes, so returning from device Settings updates automatically
 class _SettingsScreenState extends State<SettingsScreen>
     with WidgetsBindingObserver {
   final _permissionService = PermissionService();
+  final _storageService = LocalStorageService();
+  final _ttsService = TtsService();
   PermissionStatus? _notificationStatus;
   PermissionStatus? _exactAlarmStatus;
+  double _speechRate = 0.5;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _refreshPermissionStatus();
+    _ttsService.initialize();
+    _loadTtsSettings();
   }
 
   @override
@@ -47,6 +55,26 @@ class _SettingsScreenState extends State<SettingsScreen>
         _exactAlarmStatus = exactAlarm;
       });
     }
+  }
+
+  Future<void> _loadTtsSettings() async {
+    final speechRate = await _storageService.loadSpeechRate();
+    await _ttsService.setSpeechRate(speechRate);
+    if (mounted) {
+      setState(() {
+        _speechRate = speechRate;
+      });
+    }
+  }
+
+  void _onSpeechRateChanged(double value) {
+    setState(() => _speechRate = value);
+    _ttsService.setSpeechRate(value);
+    _storageService.saveSpeechRate(value);
+  }
+
+  Future<void> _testVoice() {
+    return _ttsService.speak("It's ${TimeFormatter.spoken(TimeOfDay.now())}");
   }
 
   String _label(PermissionStatus status) {
@@ -104,6 +132,22 @@ class _SettingsScreenState extends State<SettingsScreen>
           ),
           const Divider(),
           const ListTile(title: Text('Volume (TODO)')),
+          const Divider(),
+          ListTile(
+            title: const Text('Speech Rate'),
+            subtitle: Slider(
+              value: _speechRate,
+              min: 0.0,
+              max: 1.0,
+              onChanged: _onSpeechRateChanged,
+            ),
+          ),
+          ListTile(
+            title: ElevatedButton(
+              onPressed: _testVoice,
+              child: const Text('Test Voice'),
+            ),
+          ),
         ],
       ),
     );

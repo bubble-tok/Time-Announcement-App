@@ -39,4 +39,41 @@ void main() {
       );
     });
   });
+
+  group('TimeFormatter.spoken', () {
+    test('1:00 PM is "one p.m."', () {
+      expect(
+        TimeFormatter.spoken(const TimeOfDay(hour: 13, minute: 0)),
+        'one p.m.',
+      );
+    });
+
+    test('9:05 AM is "nine oh five a.m." (single-digit minute)', () {
+      expect(
+        TimeFormatter.spoken(const TimeOfDay(hour: 9, minute: 5)),
+        'nine oh five a.m.',
+      );
+    });
+
+    test('2:47 PM is "two forty-seven p.m." (two-digit minute)', () {
+      expect(
+        TimeFormatter.spoken(const TimeOfDay(hour: 14, minute: 47)),
+        'two forty-seven p.m.',
+      );
+    });
+
+    test('midnight is "twelve a.m."', () {
+      expect(
+        TimeFormatter.spoken(const TimeOfDay(hour: 0, minute: 0)),
+        'twelve a.m.',
+      );
+    });
+
+    test('noon is "twelve p.m."', () {
+      expect(
+        TimeFormatter.spoken(const TimeOfDay(hour: 12, minute: 0)),
+        'twelve p.m.',
+      );
+    });
+  });
 }

@@ -9,6 +9,7 @@ class LocalStorageService implements StorageService {
   static const _globalEnabledKey = 'globalEnabled';
   static const _appVolumeKey = 'appVolume';
   static const _followSystemVolumeKey = 'followSystemVolume';
+  static const _speechRateKey = 'speechRate';
 
   @override
   Future<void> saveHasLaunchedBefore(bool value) async {
@@ -56,5 +57,17 @@ class LocalStorageService implements StorageService {
   Future<bool> loadFollowSystemVolume() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_followSystemVolumeKey) ?? true;
+  }
+
+  @override
+  Future<void> saveSpeechRate(double value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_speechRateKey, value);
+  }
+
+  @override
+  Future<double> loadSpeechRate() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble(_speechRateKey) ?? 0.5;
   }
 }

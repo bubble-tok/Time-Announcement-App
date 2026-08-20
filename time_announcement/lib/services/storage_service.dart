@@ -1,4 +1,4 @@
-/** Abstract 
+/** Abstract
  */
 abstract class StorageService {
   // Whether the app has been launched before (first-run vs. relaunch).
@@ -16,4 +16,8 @@ abstract class StorageService {
   // Whether TTS volume should follow the device's system volume instead.
   Future<void> saveFollowSystemVolume(bool value);
   Future<bool> loadFollowSystemVolume();
+
+  // TTS speech rate.
+  Future<void> saveSpeechRate(double value);
+  Future<double> loadSpeechRate();
 }
