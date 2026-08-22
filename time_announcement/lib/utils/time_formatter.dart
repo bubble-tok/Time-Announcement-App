@@ -12,20 +12,20 @@ class TimeFormatter {
   // Formats a TimeOfDay as a natural spoken phrase for TTS
   static String spoken(TimeOfDay time) {
     final hourWord = numberWords[time.hourOfPeriod];
-    final minuteWord = _spokenMinute(time.minute);
+    final minuteWord = spokenMinute(time.minute);
     final period = time.period == DayPeriod.am ? 'a.m.' : 'p.m.';
     return minuteWord.isEmpty
         ? '$hourWord $period'
         : '$hourWord $minuteWord $period';
   }
 
-  static String _spokenMinute(int minute) {
+  static String spokenMinute(int minute) {
     if (minute == 0) return '';
     if (minute < 10) return 'oh ${numberWords[minute]}';
-    return _numberToWords(minute);
+    return numberToWords(minute);
   }
 
-  static String _numberToWords(int n) {
+  static String numberToWords(int n) {
     if (n < 20) return numberWords[n];
     final tens = tensWords[n ~/ 10];
     final ones = n % 10;

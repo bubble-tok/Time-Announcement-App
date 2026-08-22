@@ -27,9 +27,9 @@ class _SettingsScreenState extends State<SettingsScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _refreshPermissionStatus();
+    refreshPermissionStatus();
     _ttsService.initialize();
-    _loadTtsSettings();
+    loadTtsSettings();
   }
 
   @override
@@ -41,11 +41,11 @@ class _SettingsScreenState extends State<SettingsScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _refreshPermissionStatus();
+      refreshPermissionStatus();
     }
   }
 
-  Future<void> _refreshPermissionStatus() async {
+  Future<void> refreshPermissionStatus() async {
     final notification = await _permissionService.notificationStatus();
     final exactAlarm = await _permissionService.exactAlarmStatus();
 
@@ -57,7 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     }
   }
 
-  Future<void> _loadTtsSettings() async {
+  Future<void> loadTtsSettings() async {
     final speechRate = await _storageService.loadSpeechRate();
     await _ttsService.setSpeechRate(speechRate);
     if (mounted) {
@@ -67,17 +67,17 @@ class _SettingsScreenState extends State<SettingsScreen>
     }
   }
 
-  void _onSpeechRateChanged(double value) {
+  void onSpeechRateChanged(double value) {
     setState(() => _speechRate = value);
     _ttsService.setSpeechRate(value);
     _storageService.saveSpeechRate(value);
   }
 
-  Future<void> _testVoice() {
+  Future<void> testVoice() {
     return _ttsService.speak("It's ${TimeFormatter.spoken(TimeOfDay.now())}");
   }
 
-  String _label(PermissionStatus status) {
+  String label(PermissionStatus status) {
     if (status.isGranted) return 'Granted';
     if (status.isPermanentlyDenied) return 'Permanently denied';
     if (status.isDenied) return 'Denied';
@@ -85,8 +85,8 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   // single permission row with its label status and open settings button if not granted
-  Widget _permissionRow(
-    String label,
+  Widget permissionRow(
+    String title,
     PermissionStatus? status,
     Future<PermissionStatus> Function() request,
   ) {
@@ -100,15 +100,15 @@ class _SettingsScreenState extends State<SettingsScreen>
       trailing = TextButton(
         onPressed: () async {
           await request();
-          _refreshPermissionStatus();
+          refreshPermissionStatus();
         },
         child: const Text('Approve'),
       );
     }
 
     return ListTile(
-      title: Text(label),
-      subtitle: Text(status == null ? 'Checking...' : _label(status)),
+      title: Text(title),
+      subtitle: Text(status == null ? 'Checking...' : label(status)),
       trailing: trailing,
     );
   }
@@ -120,12 +120,12 @@ class _SettingsScreenState extends State<SettingsScreen>
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         children: [
-          _permissionRow(
+          permissionRow(
             'Notifications',
             _notificationStatus,
             _permissionService.requestNotification,
           ),
-          _permissionRow(
+          permissionRow(
             'Exact Alarm',
             _exactAlarmStatus,
             _permissionService.requestExactAlarm,
@@ -137,14 +137,14 @@ class _SettingsScreenState extends State<SettingsScreen>
             title: const Text('Speech Rate'),
             subtitle: Slider(
               value: _speechRate,
-              min: 0.0,
-              max: 1.0,
-              onChanged: _onSpeechRateChanged,
+              min: 0.1,
+              max: 3.0,
+              onChanged: onSpeechRateChanged,
             ),
           ),
           ListTile(
             title: ElevatedButton(
-              onPressed: _testVoice,
+              onPressed: testVoice,
               child: const Text('Test Voice'),
             ),
           ),

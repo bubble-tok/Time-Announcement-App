@@ -24,8 +24,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _refreshPermissionStatus();
-    _loadGlobalEnabled();
+    refreshPermissionStatus();
+    loadGlobalEnabled();
   }
 
   @override
@@ -37,11 +37,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _refreshPermissionStatus();
+      refreshPermissionStatus();
     }
   }
 
-  Future<void> _refreshPermissionStatus() async {
+  Future<void> refreshPermissionStatus() async {
     final notification = await _permissionService.notificationStatus();
     final exactAlarm = await _permissionService.exactAlarmStatus();
     final allGranted = notification.isGranted && exactAlarm.isGranted;
@@ -51,8 +51,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
-
-  Future<void> _loadGlobalEnabled() async {
+  Future<void> loadGlobalEnabled() async {
     final enabled = await _storageService.loadGlobalEnabled();
 
     if (mounted && !_userToggled) {
@@ -60,18 +59,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
-  void _onGlobalEnabledChanged(bool value) {
+  void onGlobalEnabledChanged(bool value) {
     _userToggled = true;
     setState(() => _globalEnabled = value);
     _storageService.saveGlobalEnabled(value);
   }
-  Future<void> _showMyDialog() async {
+
+  Future<void> showMyDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('AlertDialog Title'),
+          title: const Text('Info'),
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Approve'),
+              child: const Text('Exit'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -92,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       },
     );
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +102,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
           ),
         ],
@@ -127,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   child: const Text('Fix in Settings'),
                 ),
                 ElevatedButton(
-                  onPressed: _showMyDialog,
+                  onPressed: showMyDialog,
                   child: const Text('placeholder'),
                 ),
               ],
@@ -137,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               child: SwitchListTile(
                 title: const Text('Announcements'),
                 value: _globalEnabled,
-                onChanged: _onGlobalEnabledChanged,
+                onChanged: onGlobalEnabledChanged,
               ),
             ),
           ),

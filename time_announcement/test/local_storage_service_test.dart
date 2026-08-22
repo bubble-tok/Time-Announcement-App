@@ -4,8 +4,6 @@ import 'package:time_annoucement/services/local_storage_service.dart';
 
 void main() {
   test('LocalStorageService round-trips the global enabled flag', () async {
-    // setMockInitialValues gives SharedPreferences an in-memory backing
-    // store for tests, so this runs without a real platform channel.
     SharedPreferences.setMockInitialValues({});
     final service = LocalStorageService();
 
