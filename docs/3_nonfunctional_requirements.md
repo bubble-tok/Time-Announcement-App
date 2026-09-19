@@ -39,7 +39,6 @@
 - Quick Setup shall preview generated times before applying
 - Replacing existing times via Quick Setup shall warn user before clearing
 - Permission denied state shall provide direct link to device settings
-- App shall display last announced time on Home Screen
 - App shall support migration from global to per-day scheduling in a future update without data loss
 
 ---
