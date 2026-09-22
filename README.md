@@ -1,6 +1,6 @@
 # Time Announcement
 
-A Flutter mobile app that speaks the current time out loud at scheduled moments throughout the day — so you always know what time it is without looking at your phone.
+A Flutter mobile app that speaks the current time out loud at scheduled moments throughout the day, so you always know what time it is without looking at your phone.
 
 Unlike a regular alarm, Time Announcement doesn't need to be dismissed or turned off. It just quietly announces the time in the background, on a schedule you set, so you can stay aware of time passing without breaking focus to check your screen.
 
@@ -28,7 +28,7 @@ Unlike a regular alarm, Time Announcement doesn't need to be dismissed or turned
 
 ## Why this project is a bit different
 
-This isn't just an app — it's a full software development lifecycle practiced end to end. Alongside the Flutter code, this repo includes:
+This isn't just an app. It's a full software development lifecycle practiced end to end. Alongside the Flutter code, this repo includes:
 
 - **[Functional requirements](docs/2_functional_requirements.md)** and **[non-functional requirements](docs/3_nonfunctional_requirements.md)**
 - **[Architecture & data model docs](docs/4_architecture.md)**, including a documented plan for how the app evolves post-beta (e.g. swapping local storage for a Firebase backend without touching UI code)
@@ -36,7 +36,6 @@ This isn't just an app — it's a full software development lifecycle practiced 
 - A **[test plan](docs/7_test_plan.md)**
 - A Jira backlog tracking the beta scope cut and deferred future work
 
-The goal was to practice building software the way a small product team would — requirements and design decisions written down before code, not just after.
 
 ## Current Progress
 
