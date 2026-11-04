@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../services/local_storage_service.dart';
+import 'package:provider/provider.dart';
+
+import '../services/announcement_controller.dart';
 import '../services/permission_service.dart';
 import 'settings_screen.dart';
 
-// Placeholder Home screen
+/// Home screen: the global announcements toggle and a warning banner when
+/// required permissions are missing.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -12,20 +15,18 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-// WidgetsBindingObserver lets us hook into app lifecycle events. We use it to re-check permission status when the app resumes
+// WidgetsBindingObserver lets us re-check permission status when the app
+// resumes (e.g. returning from the device Settings app).
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  final _permissionService = PermissionService();
-  final _storageService = LocalStorageService();
+  late final PermissionService _permissionService;
   bool _permissionsGranted = true;
-  bool _globalEnabled = false;
-  bool _userToggled = false;
 
   @override
   void initState() {
     super.initState();
+    _permissionService = context.read<PermissionService>();
     WidgetsBinding.instance.addObserver(this);
     refreshPermissionStatus();
-    loadGlobalEnabled();
   }
 
   @override
@@ -51,61 +52,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> loadGlobalEnabled() async {
-    final enabled = await _storageService.loadGlobalEnabled();
-
-    if (mounted && !_userToggled) {
-      setState(() => _globalEnabled = enabled);
-    }
-  }
-
-  void onGlobalEnabledChanged(bool value) {
-    _userToggled = true;
-    setState(() => _globalEnabled = value);
-    _storageService.saveGlobalEnabled(value);
-  }
-
-  Future<void> showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Info'),
-          content: const SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('This is a demo alert dialog.'),
-                Text('Would you like to approve of this message?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Exit'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void openSettings() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<AnnouncementController>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Time Announcement'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
-            },
+            tooltip: 'Settings',
+            onPressed: openSettings,
           ),
         ],
       ),
@@ -118,16 +82,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
               actions: [
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const SettingsScreen()),
-                    );
-                  },
+                  onPressed: openSettings,
                   child: const Text('Fix in Settings'),
-                ),
-                ElevatedButton(
-                  onPressed: showMyDialog,
-                  child: const Text('placeholder'),
                 ),
               ],
             ),
@@ -135,8 +91,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             child: Center(
               child: SwitchListTile(
                 title: const Text('Announcements'),
-                value: _globalEnabled,
-                onChanged: onGlobalEnabledChanged,
+                subtitle: const Text('Every hour, 9 AM to 10 PM'),
+                value: controller.enabled,
+                onChanged: controller.loaded ? controller.setEnabled : null,
               ),
             ),
           ),

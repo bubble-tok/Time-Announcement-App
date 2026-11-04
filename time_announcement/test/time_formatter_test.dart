@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:time_annoucement/utils/time_formatter.dart';
+import 'package:time_announcement/utils/time_formatter.dart';
 
 void main() {
   group('TimeFormatter.format', () {
