@@ -1,9 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/tts_settings.dart';
 import 'storage_service.dart';
 
-/**
- * LocalStorageService is a concrete implementation of StorageService
- */
+/// [StorageService] implementation backed by shared_preferences.
 class LocalStorageService implements StorageService {
   static const _hasLaunchedBeforeKey = 'hasLaunchedBefore';
   static const _globalEnabledKey = 'globalEnabled';
@@ -68,6 +67,23 @@ class LocalStorageService implements StorageService {
   @override
   Future<double> loadSpeechRate() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble(_speechRateKey) ?? 0.5;
+    // Older builds allowed rates up to 3.0; clamp to the valid range.
+    return (prefs.getDouble(_speechRateKey) ?? 0.5).clamp(0.0, 1.0).toDouble();
+  }
+
+  @override
+  Future<TtsSettings> loadTtsSettings() async {
+    return TtsSettings(
+      followSystemVolume: await loadFollowSystemVolume(),
+      appVolume: await loadAppVolume(),
+      speechRate: await loadSpeechRate(),
+    );
+  }
+
+  @override
+  Future<void> saveTtsSettings(TtsSettings settings) async {
+    await saveFollowSystemVolume(settings.followSystemVolume);
+    await saveAppVolume(settings.appVolume);
+    await saveSpeechRate(settings.speechRate);
   }
 }

@@ -1,6 +1,6 @@
 {
-    "name": "time_annoucement",
-    "short_name": "time_annoucement",
+    "name": "time_announcement",
+    "short_name": "time_announcement",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
