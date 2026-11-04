@@ -1,5 +1,6 @@
-/** Abstract
- */
+import '../models/tts_settings.dart';
+
+/// Persistent storage for app preferences and speech settings.
 abstract class StorageService {
   // Whether the app has been launched before (first-run vs. relaunch).
   Future<void> saveHasLaunchedBefore(bool value);
@@ -20,4 +21,10 @@ abstract class StorageService {
   // TTS speech rate.
   Future<void> saveSpeechRate(double value);
   Future<double> loadSpeechRate();
+
+  /// Loads all speech settings at once.
+  Future<TtsSettings> loadTtsSettings();
+
+  /// Saves all speech settings at once.
+  Future<void> saveTtsSettings(TtsSettings settings);
 }

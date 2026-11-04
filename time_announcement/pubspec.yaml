@@ -1,5 +1,5 @@
-name: time_annoucement
-description: "A new Flutter project."
+name: time_announcement
+description: "Speaks the current time aloud at scheduled moments."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -39,8 +39,10 @@ dependencies:
   provider: ^6.1.0
 
   cupertino_icons: ^1.0.8
-  volume_controller: ^3.6.0
   permission_handler: ^12.0.3
+  android_alarm_manager_plus: ^5.1.2
+  timezone: ^0.11.2
+  flutter_timezone: ^5.1.1
 
 dev_dependencies:
   flutter_test:

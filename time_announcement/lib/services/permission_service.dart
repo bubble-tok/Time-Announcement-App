@@ -1,19 +1,24 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Notification and exact-alarm permissions. Exact alarms are Android-only;
+/// elsewhere they are reported as granted.
 class PermissionService {
+  static bool get _usesExactAlarms =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
   Future<PermissionStatus> notificationStatus() =>
       Permission.notification.status;
 
   Future<PermissionStatus> exactAlarmStatus() async {
-    if (kIsWeb) return PermissionStatus.granted;
+    if (!_usesExactAlarms) return PermissionStatus.granted;
     return Permission.scheduleExactAlarm.status;
   }
 
   Future<void> requestAllPermissions() async {
     final permissions = [
       Permission.notification,
-      if (!kIsWeb) Permission.scheduleExactAlarm,
+      if (_usesExactAlarms) Permission.scheduleExactAlarm,
     ];
     await permissions.request();
   }
@@ -23,7 +28,7 @@ class PermissionService {
       Permission.notification.request();
 
   Future<PermissionStatus> requestExactAlarm() async {
-    if (kIsWeb) return PermissionStatus.granted;
+    if (!_usesExactAlarms) return PermissionStatus.granted;
     return Permission.scheduleExactAlarm.request();
   }
 
