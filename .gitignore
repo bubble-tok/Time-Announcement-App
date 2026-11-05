@@ -124,3 +124,18 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+# macOS / IDE files (Android Studio, IntelliJ, Xcode)
+.DS_Store
+.idea/
+*.iml
+*.ipr
+*.iws
+**/android/.kotlin/
+**/android/app/.cxx/
+**/*.xcworkspace/xcuserdata/
+**/*.xcodeproj/xcuserdata/
+
+# Lock files apps should commit, so everyone builds with the same versions
+!**/pubspec.lock
+!**/ios/Podfile.lock
+!**/macos/Podfile.lock
